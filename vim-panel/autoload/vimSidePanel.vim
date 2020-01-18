@@ -1,6 +1,26 @@
-" TODO: choose position and size of panel
 let s:VimPanel = {}
 let g:VimPanel = s:VimPanel
+
+function vimSidePanel#Render(text, scope)
+    if !s:IsOpen()
+        call s:Open()
+    endif
+    let b:VimPanel.scope = a:scope
+    setlocal noreadonly modifiable
+    normal! ggdG
+    put! =a:text
+    setlocal readonly nomodifiable
+endfunction
+
+" Toggle panel open or close
+function! vimSidePanel:TogglePanel()
+    let a:existing = (s:GetExistingPanel() !=# -1)
+    if a:existing
+        call s:Close()
+    else
+        call s:Open()
+    endif
+endfunction
 
 " Exists for tab
 " Function: s:VimPanel.ExistsForTab()   {{{1
@@ -22,23 +42,12 @@ function! s:Open()
     endif
     let b:VimPanel = 1
     execute 'below 10split ' . t:VimPanelBufferName
-    setlocal noreadonly modifiable
     setlocal buftype=nofile
     setlocal bufhidden=hide
     setlocal noswapfile
-    put! =t:VimPanelBufferName
-    setlocal readonly nomodifiable
+    let b:VimPanel = {}
 endfunction
 
-" Toggle panel open or close
-function! s:TogglePanel()
-    let a:existing = (s:GetExistingPanel() !=# -1)
-    if a:existing
-        call s:Close()
-    else
-        call s:Open()
-    endif
-endfunction
 
 
 " FUNCTION: exec(cmd, ignoreAll) {{{2
@@ -90,9 +99,6 @@ function! s:Close()
     endif
 endfunction
 
-" On key over line
-"   - Trigger event, give window name, line, line number, and if its a panel or not
-
 function! s:BufNamePrefix()
     return 'VimPanel_'
 endfunction
@@ -135,6 +141,5 @@ function! s:NextBufferNumber()
     return s:NextBufNum
 endfunction
 
-
-command TogglePanel call s:TogglePanel()
-command CheckExists call s:ExistsForTab()
+command Render call vimSidePanel#Render('tested', 'coveragepy')
+command TogglePanel call vimSidePanel#TogglePanel()
