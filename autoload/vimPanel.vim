@@ -13,7 +13,7 @@ function vimSidePanel#Render(text, scope)
 endfunction
 
 " Toggle panel open or close
-function! vimSidePanel:TogglePanel()
+function! vimSidePanel#TogglePanel()
     let a:existing = (s:GetExistingPanel() !=# -1)
     if a:existing
         call s:Close()
@@ -140,6 +140,3 @@ function! s:NextBufferNumber()
 
     return s:NextBufNum
 endfunction
-
-command Render call vimSidePanel#Render('tested', 'coveragepy')
-command TogglePanel call vimSidePanel#TogglePanel()
