@@ -1,7 +1,8 @@
 let s:VimPanel = {}
 let g:VimPanel = s:VimPanel
 
-function vimSidePanel#Render(text, scope)
+" Renders text onto a panel, opens new panel if necessary
+function vimPanel#Render(text, scope)
     if !s:IsOpen()
         call s:Open()
     endif
@@ -13,7 +14,7 @@ function vimSidePanel#Render(text, scope)
 endfunction
 
 " Toggle panel open or close
-function! vimSidePanel#TogglePanel()
+function! vimPanel#TogglePanel()
     let a:existing = (s:GetExistingPanel() !=# -1)
     if a:existing
         call s:Close()
@@ -22,21 +23,16 @@ function! vimSidePanel#TogglePanel()
     endif
 endfunction
 
-" Exists for tab
-" Function: s:VimPanel.ExistsForTab()   {{{1
-" Returns 1 if a nerd tree root exists in the current tab
 function! s:GetExistingPanel()
     if !exists("t:VimPanelBufferName")
         return -1
     endif
-    "check b:NERDTree is still there and hasn't been e.g. :bdeleted
+    "check panel is still there and hasn't been e.g. :bdeleted
     let loaded = bufwinnr(t:VimPanelBufferName)
     return loaded
 endfunction
 
-" Is Panel Open
 function! s:Open()
-    " Open new panel
     if !exists("t:VimPanelBufferName")
         let t:VimPanelBufferName = s:NextBufferName()
     endif
@@ -50,8 +46,6 @@ endfunction
 
 
 
-" FUNCTION: exec(cmd, ignoreAll) {{{2
-" Same as :exec cmd but, if ignoreAll is TRUE, set eventignore=all for the duration
 function! s:exec(cmd, ignoreAll) abort
     let old_ei = &eventignore
 
@@ -63,9 +57,6 @@ function! s:exec(cmd, ignoreAll) abort
 endfunction
 
 
-" Close panel
-"FUNCTION: s:Close() {{{1
-"Closes the tab tree window for this tab
 function! s:Close()
     if !s:IsOpen()
         return
@@ -103,9 +94,6 @@ function! s:BufNamePrefix()
     return 'VimPanel_'
 endfunction
 
-" Get panel buffer?
-"FUNCTION: s:NERDTree.GetWinNum() {{{1
-"gets the nerd tree window number for this tab
 function! s:GetWinNum()
     if exists('t:NERDTreeBufName')
         return bufwinnr(t:NERDTreeBufName)
@@ -121,7 +109,6 @@ function! s:GetWinNum()
     return -1
 endfunction
 
-"FUNCTION: s:NERDTree.IsOpen() {{{1
 function! s:IsOpen()
     return s:GetWinNum() !=# -1
 endfunction
