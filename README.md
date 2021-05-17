@@ -17,7 +17,7 @@ Toggle the panel with the following command
 call vimPanel#TogglePanel()
 ```
 
-Register hotkeys with the following commandA
+Register hotkeys with the following command
 ```vim
 call keyMap#Create(
 \       {'scope':'<your_plugin_name>',
